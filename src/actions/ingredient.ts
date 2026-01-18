@@ -33,7 +33,9 @@ export async function createIngredient(formData: FormData) {
     return { success: true, ingredient };
   } catch (error) {
     if (error instanceof ZodError) {
-      return { error: error.errors.map((e) => e.message).join(", ") };
+      return {
+        error: error.issues.map((e) => e.message).join(", "),
+      };
     }
     console.error("Ошибка создания ингредиента:", error);
     return { error: "Ошибка создания ингредиента" };
