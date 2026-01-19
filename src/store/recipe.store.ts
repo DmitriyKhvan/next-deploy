@@ -48,7 +48,7 @@ export const useRecipeStore = create<IRecipeState>()((set) => ({
       const result = await createRecipe(formData);
       if (result.success) {
         set((state) => ({
-          recipes: [...state.recipes, result.recipe],
+          recipes: [...state.recipes, result.recipe as IRecipe],
           isLoading: false,
         }));
         return { success: true, recipe: result.recipe };
@@ -71,7 +71,7 @@ export const useRecipeStore = create<IRecipeState>()((set) => ({
         set((state) => ({
           recipes: state.recipes.map((recipe) =>
             recipe.id === id ? result.recipe : recipe
-          ),
+          ) as IRecipe[],
           isLoading: false,
         }));
         return { success: true, recipe: result.recipe };
