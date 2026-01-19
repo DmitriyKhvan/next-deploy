@@ -8,12 +8,12 @@ generator client {
   provider = "prisma-client"
   engineType = "client"
   output   = "../src/generated/prisma"
-  previewFeatures = ["accelerate"]
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
 }
 
 model User {
