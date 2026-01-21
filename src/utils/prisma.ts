@@ -1,4 +1,4 @@
-// import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 // import { Pool } from "pg";
 // import { attachDatabasePool } from "@vercel/functions";
 import { PrismaClient } from "@/generated/prisma/client";
@@ -18,21 +18,22 @@ const globalForPrisma = global as unknown as {
 //     adapter: new PrismaPg(pool),
 //   }).$extends(withAccelerate());
 
-// const adapter = new PrismaPg({
-//   connectionString: process.env.DATABASE_URL,
-// });
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
 
 // const prisma =
 //   globalForPrisma.prisma ||
 //   new PrismaClient({
 //     adapter,
 //   }).$extends(withAccelerate());
+const url = process.env.DATABASE_URL ?? "";
+const isAccelerate = url.startsWith("prisma://");
+const params = isAccelerate ? { accelerateUrl: url } : { adapter: adapter };
 
 const prisma =
   globalForPrisma.prisma ||
-  new PrismaClient({ accelerateUrl: process.env.DATABASE_URL ?? "" }).$extends(
-    withAccelerate()
-  );
+  new PrismaClient({ ...params }).$extends(withAccelerate());
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
