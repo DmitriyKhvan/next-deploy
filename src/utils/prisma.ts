@@ -27,11 +27,11 @@ const adapter = new PrismaPg({
 //   new PrismaClient({
 //     adapter,
 //   }).$extends(withAccelerate());
-const url = process.env.DATABASE_URL ?? "";
-const isAccelerate = url.startsWith("prisma://");
-let prismaClient = isAccelerate
-  ? new PrismaClient({ accelerateUrl: url })
-  : new PrismaClient({ adapter });
+
+let prismaClient =
+  process.env.NODE_ENV === "production"
+    ? new PrismaClient({ accelerateUrl: process.env.DATABASE_URL ?? "" })
+    : new PrismaClient({ adapter });
 
 const prisma =
   globalForPrisma.prisma || prismaClient.$extends(withAccelerate());
