@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
 
   const token = await getToken(params);
 
-  const protectedRoutes = ["/ingredients", "/recipes/new", "recipes/:path*"];
+  const protectedRoutes = ["/ingredients", "/recipes/new", "/recipes/:path*"];
 
   if (
     protectedRoutes.some((route) =>
