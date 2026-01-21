@@ -1,13 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { GetTokenParams, getToken } from "next-auth/jwt";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const token = await getToken({
+  let params: GetTokenParams = {
     req: request,
-    secret: process.env.AUTH_SECRET,
-  });
+    secret: process.env.AUTH_SECRET ?? "secret",
+  };
+
+  if (process.env.NODE_ENV === "production") {
+    params = {
+      ...params,
+      cookieName: "__Secure-authjs.session-token",
+    };
+  }
+
+  const token = await getToken(params);
 
   const protectedRoutes = ["/ingredients", "/recipes/new", "recipes/:path*"];
 
@@ -27,5 +36,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/ingredients", "/recipes/new"],
+  matcher: ["/ingredients", "/recipes/new", "/recipes/:path*"],
 };
